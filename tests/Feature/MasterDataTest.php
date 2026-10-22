@@ -182,4 +182,16 @@ class MasterDataTest extends TestCase
         $this->post('/login', ['username' => 'rina.k', 'password' => 'password'])->assertSessionHasErrors('username');
         $this->post('/login', ['username' => 'rina.k', 'password' => 'sandibaru99'])->assertRedirect('/dashboard');
     }
+
+    public function test_perintah_reset_sandi_darurat(): void
+    {
+        $this->rina->update(['is_active' => false]);
+
+        $this->artisan('simkeg:reset-sandi', ['username' => 'rina.k', 'sandi' => 'pendek'])->assertFailed();
+        $this->artisan('simkeg:reset-sandi', ['username' => 'tidak.ada', 'sandi' => 'sandibaru99'])->assertFailed();
+        $this->artisan('simkeg:reset-sandi', ['username' => 'rina.k', 'sandi' => 'sandibaru99'])->assertSuccessful();
+
+        $this->assertTrue($this->rina->fresh()->is_active);
+        $this->post('/login', ['username' => 'rina.k', 'password' => 'sandibaru99'])->assertRedirect('/dashboard');
+    }
 }
