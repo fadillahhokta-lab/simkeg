@@ -53,6 +53,46 @@ Data contoh (opsional, ditolak di production):
 php artisan db:seed --class=DemoSeeder   # akun hendra.w (Admin) dan rina.k (Staff), sandi demo1234
 ```
 
+## Deploy dengan Docker
+
+Satu image (FrankenPHP) berisi aplikasi dan aset yang sudah di-build, ditambah MariaDB dari `compose.yaml`.
+
+1. Siapkan `.env` di server dari `.env.example`, minimal:
+
+   ```dotenv
+   APP_ENV=production
+   APP_DEBUG=false
+   APP_URL=http://alamat-internal:8080
+   APP_KEY=base64:...        # php artisan key:generate --show
+   DB_PASSWORD=...
+   DB_ROOT_PASSWORD=...
+   ADMIN_USERNAME=admin
+   ADMIN_PASSWORD=...        # sandi Admin pertama
+   APP_VERSION=1.0.0         # tag image
+   APP_PORT=8080             # port di host
+   ```
+
+   `.env` tidak ikut masuk image; semua rahasia dibaca saat container berjalan.
+
+2. Build dan jalankan:
+
+   ```bash
+   docker compose build
+   docker compose up -d
+   docker compose logs -f app
+   ```
+
+   Saat start, container menjalankan migrasi, seeder dasar (role, Admin pertama, jenis kegiatan), lalu cache konfigurasi.
+
+3. Buka `http://alamat-internal:8080`.
+
+Catatan:
+
+- Data tersimpan di volume `dbdata` (database) dan `storage` (lampiran, sesi). **Jangan jalankan `docker compose down -v`**, karena perintah itu menghapus keduanya.
+- Container melayani HTTP biasa di port 80. Pasang TLS di reverse proxy atau VPN.
+- Migrasi otomatis aman untuk satu instance. Kalau nanti memakai beberapa replika, pindahkan migrasi ke langkah deploy terpisah.
+- Perintah artisan di container: `docker compose exec app php artisan ...`
+
 ## Test
 
 ```bash

@@ -1,4 +1,25 @@
 services:
+  app:
+    build: .
+    image: simkeg:${APP_VERSION:-1.0.0}
+    restart: unless-stopped
+    # APP_KEY, kredensial DB, dan ADMIN_* hanya dari .env di server, tidak masuk image.
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      SERVER_NAME: ":80"
+      LOG_CHANNEL: stderr
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - storage:/app/storage
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: mariadb:11.4
     restart: unless-stopped
@@ -7,6 +28,7 @@ services:
       MARIADB_USER: ${DB_USERNAME:-simkeg}
       MARIADB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD wajib diisi di .env}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD wajib diisi di .env}
+    # Untuk development (php artisan serve di host). Hanya terbuka di localhost.
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
@@ -19,3 +41,7 @@ services:
 
 volumes:
   dbdata:
+  # Lampiran surat tugas, sesi, dan cache view. Jangan dihapus.
+  storage:
+  caddy_data:
+  caddy_config:

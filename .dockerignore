@@ -1,0 +1,33 @@
+# Wajib (CLAUDE.md)
+.git
+node_modules
+vendor
+.env
+.env.*
+!.env.example
+docs
+storage/logs
+tests
+
+# Hasil build dan cache lokal
+public/build
+public/hot
+public/storage
+bootstrap/cache/*.php
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/private/*
+storage/app/public/*
+.phpunit.cache
+.phpunit.result.cache
+
+# Lain-lain
+CLAUDE.md
+AGENTS.md
+.DS_Store
+.idea
+.vscode
+compose.yaml
+Dockerfile
+.dockerignore
