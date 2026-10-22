@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LampiranDinasController;
 use App\Livewire\Dashboard;
 use App\Livewire\Dinas;
+use App\Livewire\JenisKegiatan;
+use App\Livewire\Pengguna;
 use App\Livewire\Kegiatan;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::view('/rekap', 'placeholder', ['title' => 'Rekap & Export'])->name('rekap.index');
 
     Route::middleware('role:admin')->group(function () {
-        Route::view('/jenis-kegiatan', 'placeholder', ['title' => 'Jenis Kegiatan'])->name('jenis-kegiatan.index');
-        Route::view('/pengguna', 'placeholder', ['title' => 'Manajemen User'])->name('pengguna.index');
+        Route::get('/jenis-kegiatan', JenisKegiatan\Index::class)->name('jenis-kegiatan.index');
+        Route::get('/pengguna', Pengguna\Index::class)->name('pengguna.index');
     });
 });
