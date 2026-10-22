@@ -9,6 +9,7 @@ use App\Models\Kegiatan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Data contoh mengikuti prototipe v0. Hanya untuk development:
@@ -81,27 +82,66 @@ class DemoSeeder extends Seeder
             $item->tim()->sync($tim($anggota));
         }
 
+        // Kolom terakhir: nama file lampiran contoh (null = tanpa lampiran).
         $dinas = [
-            ['PHP-004-2026', 'Denpasar', 'Pemantauan tindak lanjut temuan di satker Bali.', 'Rina Kartika, Maya Puspita', '2026-09-29', '2026-10-01'],
-            ['PP-015-2026', 'Bandar Lampung', 'Pengawasan kios pengecer pupuk bersubsidi.', 'Budi Santoso, Sari Handayani', '2026-09-22', '2026-09-25'],
-            ['SA-007-2026', 'Medan', 'Pengumpulan data dan wawancara satker wilayah Sumatera Utara.', 'Dewi Anggraini, Fajar Nugroho', '2026-09-14', '2026-09-17'],
-            ['PP-014-2026', 'Malang', 'Pengawasan lapangan pasar 3 dan 4.', 'Budi Santoso, Agus Pratama', '2026-09-08', '2026-09-10'],
-            ['PP-014-2026', 'Surabaya', 'Pengawasan lapangan pasar 1 dan 2 serta koordinasi dengan dinas perdagangan.', 'Rina Kartika, Budi Santoso', '2026-08-11', '2026-08-13'],
-            ['PHP-003-2026', 'Makassar', 'Verifikasi bukti tindak lanjut rekomendasi.', 'Dewi Anggraini', '2026-08-03', '2026-08-05'],
-            ['PSLH-009-2026', 'Semarang', 'Peninjauan lokasi proyek jalan tol.', 'Agus Pratama', '2026-07-20', '2026-07-22'],
-            ['SA-005-2026', 'Bandung', 'Reviu laporan keuangan satker Jawa Barat.', 'Maya Puspita, Fajar Nugroho', '2026-07-07', '2026-07-08'],
-            ['PP-012-2026', 'Yogyakarta', 'Klarifikasi pengaduan dengan dinas perizinan.', 'Rina Kartika, Lestari Wulandari', '2026-06-16', '2026-06-18'],
-            ['PSLH-010-2026', 'Samarinda', 'Pengambilan sampel lanjutan.', 'Agus Pratama', '2026-05-25', '2026-05-27'],
-            ['PSLH-010-2026', 'Balikpapan', 'Pengambilan sampel kualitas udara.', 'Agus Pratama, Sari Handayani', '2026-05-18', '2026-05-21'],
+            ['PHP-004-2026', 'Denpasar', 'Pemantauan tindak lanjut temuan di satker Bali.', 'Rina Kartika, Maya Puspita', '2026-09-29', '2026-10-01', 'ST-PHP-004-01'],
+            ['PP-015-2026', 'Bandar Lampung', 'Pengawasan kios pengecer pupuk bersubsidi.', 'Budi Santoso, Sari Handayani', '2026-09-22', '2026-09-25', 'ST-PP-015-01'],
+            ['SA-007-2026', 'Medan', 'Pengumpulan data dan wawancara satker wilayah Sumatera Utara.', 'Dewi Anggraini, Fajar Nugroho', '2026-09-14', '2026-09-17', 'ST-SA-007-01'],
+            ['PP-014-2026', 'Malang', 'Pengawasan lapangan pasar 3 dan 4.', 'Budi Santoso, Agus Pratama', '2026-09-08', '2026-09-10', 'ST-PP-014-02'],
+            ['PP-014-2026', 'Surabaya', 'Pengawasan lapangan pasar 1 dan 2 serta koordinasi dengan dinas perdagangan.', 'Rina Kartika, Budi Santoso', '2026-08-11', '2026-08-13', 'ST-PP-014-01'],
+            ['PHP-003-2026', 'Makassar', 'Verifikasi bukti tindak lanjut rekomendasi.', 'Dewi Anggraini', '2026-08-03', '2026-08-05', null],
+            ['PSLH-009-2026', 'Semarang', 'Peninjauan lokasi proyek jalan tol.', 'Agus Pratama', '2026-07-20', '2026-07-22', 'ST-PSLH-009-01'],
+            ['SA-005-2026', 'Bandung', 'Reviu laporan keuangan satker Jawa Barat.', 'Maya Puspita, Fajar Nugroho', '2026-07-07', '2026-07-08', 'ST-SA-005-01'],
+            ['PP-012-2026', 'Yogyakarta', 'Klarifikasi pengaduan dengan dinas perizinan.', 'Rina Kartika, Lestari Wulandari', '2026-06-16', '2026-06-18', null],
+            ['PSLH-010-2026', 'Samarinda', 'Pengambilan sampel lanjutan.', 'Agus Pratama', '2026-05-25', '2026-05-27', null],
+            ['PSLH-010-2026', 'Balikpapan', 'Pengambilan sampel kualitas udara.', 'Agus Pratama, Sari Handayani', '2026-05-18', '2026-05-21', null],
         ];
 
         $kegiatanId = Kegiatan::pluck('id', 'kode');
-        foreach ($dinas as [$kode, $kota, $keperluan, $staff, $berangkat, $kembali]) {
+        foreach ($dinas as [$kode, $kota, $keperluan, $staff, $berangkat, $kembali, $lampiran]) {
+            $path = null;
+            if ($lampiran) {
+                $path = "surat-tugas/demo/{$lampiran}.pdf";
+                Storage::disk(DinasLuarKota::DISK_LAMPIRAN)->put($path, $this->pdfContoh("Surat tugas {$lampiran}"));
+            }
+
             $item = DinasLuarKota::updateOrCreate(
                 ['kegiatan_id' => $kegiatanId[$kode], 'kota_tujuan' => $kota, 'tanggal_berangkat' => $berangkat],
-                ['tanggal_kembali' => $kembali, 'keperluan' => $keperluan, 'created_by' => $users['Hendra Wijaya']->id],
+                [
+                    'tanggal_kembali' => $kembali,
+                    'keperluan' => $keperluan,
+                    'lampiran_surat_tugas' => $path,
+                    'created_by' => $users['Hendra Wijaya']->id,
+                ],
             );
             $item->staff()->sync($tim($staff));
         }
+    }
+
+    /** PDF satu halaman berisi satu baris teks, cukup untuk mencoba unduhan. */
+    private function pdfContoh(string $teks): string
+    {
+        $stream = "BT /F1 18 Tf 72 720 Td ({$teks}) Tj ET";
+        $objek = [
+            '<< /Type /Catalog /Pages 2 0 R >>',
+            '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+            '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+            '<< /Length '.strlen($stream)." >>\nstream\n{$stream}\nendstream",
+            '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+        ];
+
+        $pdf = "%PDF-1.4\n";
+        $offset = [];
+        foreach ($objek as $i => $isi) {
+            $offset[] = strlen($pdf);
+            $pdf .= ($i + 1)." 0 obj\n{$isi}\nendobj\n";
+        }
+        $xref = strlen($pdf);
+        $pdf .= "xref\n0 ".(count($objek) + 1)."\n0000000000 65535 f \n";
+        foreach ($offset as $o) {
+            $pdf .= sprintf("%010d 00000 n \n", $o);
+        }
+
+        return $pdf."trailer\n<< /Size ".(count($objek) + 1)." /Root 1 0 R >>\nstartxref\n{$xref}\n%%EOF\n";
     }
 }

@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Lampiran privat diunduh lewat route yang dicek policy, bukan URL bertanda tangan.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

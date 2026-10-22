@@ -128,6 +128,11 @@
 
             {{-- Dinas --}}
             <x-card x-show="tab === 'dinas'" x-cloak title="Dinas luar kota" description="Perjalanan dinas yang terkait kegiatan ini.">
+                @can('create', App\Models\DinasLuarKota::class)
+                    <x-slot:actions>
+                        <x-button size="sm" variant="outline" icon="plus" :href="route('dinas.create', ['kegiatan' => $k->id])">Catat dinas</x-button>
+                    </x-slot:actions>
+                @endcan
                 @if ($k->dinasLuarKota->isEmpty())
                     <p class="text-sm text-muted-foreground">Belum ada dinas luar kota.</p>
                 @else
@@ -135,7 +140,7 @@
                         @foreach ($k->dinasLuarKota->sortByDesc('tanggal_berangkat') as $dinas)
                             <li class="flex flex-col gap-1 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
                                 <span class="flex flex-col gap-0.5">
-                                    <span class="flex items-center gap-1.5 font-medium"><x-icon name="map-pin" class="text-muted-foreground" />{{ $dinas->kota_tujuan }}</span>
+                                    <a href="{{ route('dinas.show', $dinas) }}" class="flex items-center gap-1.5 font-medium hover:underline"><x-icon name="map-pin" class="text-muted-foreground" />{{ $dinas->kota_tujuan }}</a>
                                     <span class="text-muted-foreground">{{ $dinas->keperluan }}</span>
                                 </span>
                                 <span class="flex items-center gap-3 text-muted-foreground">
