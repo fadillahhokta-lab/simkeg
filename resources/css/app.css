@@ -1,0 +1,47 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* Token dari docs/design/tokens.md. Jangan tambah hex di luar daftar ini. */
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    --color-background: #f7f6f2;
+    --color-foreground: #1a2138;
+    --color-card: #ffffff;
+    --color-primary: #1e2a4a;
+    --color-primary-foreground: #ffffff;
+    --color-navy-soft: #e6e9f0;
+    --color-muted: #efede6;
+    --color-muted-foreground: #5b6275;
+    --color-border: #e3e0d6;
+    --color-input: #d9d5c8;
+    --color-khaki: #c3b091;
+    --color-khaki-soft: #f3eee4;
+    --color-khaki-dark: #7a6844;
+    --color-success: #15803d;
+    --color-success-soft: #e7f4ec;
+    --color-danger: #b42318;
+    --color-danger-soft: #fdecea;
+    --color-sidebar: #1e2a4a;
+    --color-sidebar-foreground: #c9cfdf;
+    --color-sidebar-accent: #2e3f6b;
+    --color-sidebar-primary: #c3b091;
+    --color-sidebar-border: #ffffff14;
+    --color-chart-1: #1e2a4a;
+    --color-chart-2: #c3b091;
+    --color-chart-3: #5a6a94;
+    --color-chart-4: #9aa3bd;
+    --color-chart-5: #7a6844;
+
+    --radius-lg: 0.625rem;
+    --radius-md: 0.5rem;
+}
+
+@layer base {
+    body {
+        @apply bg-background text-foreground antialiased;
+    }
+}
