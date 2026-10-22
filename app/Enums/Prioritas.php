@@ -12,4 +12,14 @@ enum Prioritas: string
     {
         return ucfirst($this->value);
     }
+
+    /** Nada <x-badge>. */
+    public function tone(): string
+    {
+        return match ($this) {
+            self::Rendah => 'outline',
+            self::Sedang => 'outline-khaki',
+            self::Tinggi => 'outline-danger',
+        };
+    }
 }

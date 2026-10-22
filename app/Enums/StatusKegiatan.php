@@ -18,4 +18,25 @@ enum StatusKegiatan: string
             self::Ditunda => 'Ditunda',
         };
     }
+
+    /** Nada <x-badge>. */
+    public function tone(): string
+    {
+        return match ($this) {
+            self::BelumMulai => 'outline',
+            self::Berjalan => 'primary',
+            self::Selesai => 'success',
+            self::Ditunda => 'khaki',
+        };
+    }
+
+    public function icon(): string
+    {
+        return match ($this) {
+            self::BelumMulai => 'circle-dashed',
+            self::Berjalan => 'circle-play',
+            self::Selesai => 'circle-check',
+            self::Ditunda => 'circle-pause',
+        };
+    }
 }

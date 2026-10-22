@@ -45,3 +45,7 @@
         @apply bg-background text-foreground antialiased;
     }
 }
+
+[x-cloak] {
+    display: none !important;
+}

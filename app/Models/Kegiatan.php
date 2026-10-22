@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Enums\Prioritas;
 use App\Enums\StatusKegiatan;
+use App\Policies\KegiatanPolicy;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Table('kegiatan')]
+#[UsePolicy(KegiatanPolicy::class)]
+#[RouteKey('kode')]
 #[Fillable([
     'kode', 'judul', 'jenis_kegiatan_id', 'deskripsi', 'status', 'detail_status', 'progres',
     'prioritas', 'tanggal_mulai', 'tanggal_target_selesai', 'tanggal_selesai_aktual', 'catatan',
@@ -69,6 +74,16 @@ class Kegiatan extends Model
     public function jenisKegiatan(): BelongsTo
     {
         return $this->belongsTo(JenisKegiatan::class);
+    }
+
+    public function pembuat(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function pengubah(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function tim(): BelongsToMany
