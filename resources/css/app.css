@@ -4,7 +4,7 @@
 @source '../../storage/framework/views/*.php';
 
 /* Token dari docs/design/tokens.md. Jangan tambah hex di luar daftar ini. */
-@theme {
+@theme static {
     --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
