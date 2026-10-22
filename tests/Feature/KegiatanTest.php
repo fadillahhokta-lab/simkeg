@@ -101,15 +101,38 @@ class KegiatanTest extends TestCase
             ->set('status', 'selesai')
             ->set('progres', 100)
             ->set('catatan', 'Laporan akhir terkirim')
+            ->set('hasil', '12 pasar diperiksa')
+            ->set('rekomendasi', 'Tera ulang timbangan')
             ->call('simpanProgres')
             ->assertHasNoErrors()
-            ->assertSee('Laporan akhir terkirim');
+            ->assertSee('Laporan akhir terkirim')
+            ->assertSee('12 pasar diperiksa');
 
         $kegiatan = $this->milikRina->fresh();
         $this->assertSame(StatusKegiatan::Selesai, $kegiatan->status);
         $this->assertSame(100, $kegiatan->progres);
         $this->assertTrue($kegiatan->tanggal_selesai_aktual->isToday());
-        $this->assertSame($this->rina->id, $kegiatan->logs()->sole()->user_id);
+        $this->assertSame('Tera ulang timbangan', $kegiatan->rekomendasi);
+        $log = $kegiatan->logs()->sole();
+        $this->assertSame($this->rina->id, $log->user_id);
+        $this->assertSame(['dari' => null, 'ke' => '12 pasar diperiksa'], $log->perubahan['hasil']);
+    }
+
+    public function test_hasil_dan_rekomendasi_wajib_saat_selesai(): void
+    {
+        Livewire::actingAs($this->rina)->test(Show::class, ['kegiatan' => $this->milikRina])
+            ->set('status', 'selesai')
+            ->call('simpanProgres')
+            ->assertHasErrors(['hasil' => 'required_if', 'rekomendasi' => 'required_if']);
+        $this->assertNotSame(StatusKegiatan::Selesai, $this->milikRina->fresh()->status);
+
+        // Status lain: boleh kosong, boleh diisi kapan saja.
+        Livewire::actingAs($this->rina)->test(Show::class, ['kegiatan' => $this->milikRina])
+            ->set('status', 'berjalan')
+            ->set('hasil', 'Temuan sementara')
+            ->call('simpanProgres')
+            ->assertHasNoErrors();
+        $this->assertSame('Temuan sementara', $this->milikRina->fresh()->hasil);
     }
 
     public function test_staff_di_luar_tim_tidak_bisa_update_progres(): void

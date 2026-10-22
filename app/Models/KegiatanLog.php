@@ -33,11 +33,14 @@ class KegiatanLog extends Model
     /**
      * Perubahan dalam bentuk siap tampil.
      *
-     * @return list<array{label: string, dari: ?string, ke: ?string}>
+     * @return list<array{field: string, label: string, dari: ?string, ke: ?string}>
      */
     public function ringkasan(): array
     {
-        $label = ['status' => 'Status', 'detail_status' => 'Detail status', 'progres' => 'Progres', 'catatan' => 'Catatan'];
+        $label = [
+            'status' => 'Status', 'detail_status' => 'Detail status', 'progres' => 'Progres',
+            'catatan' => 'Catatan', 'hasil' => 'Hasil', 'rekomendasi' => 'Rekomendasi',
+        ];
 
         $format = fn (string $field, $nilai) => match (true) {
             $nilai === null || $nilai === '' => null,

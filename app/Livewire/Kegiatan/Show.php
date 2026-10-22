@@ -23,6 +23,11 @@ class Show extends Component
     /** Catatan baru; dikosongkan setelah disimpan. */
     public string $catatan = '';
 
+    /** Hasil dan rekomendasi bersifat tetap (bisa disunting), wajib saat status Selesai. */
+    public string $hasil = '';
+
+    public string $rekomendasi = '';
+
     public function mount(Kegiatan $kegiatan): void
     {
         $this->authorize('view', $kegiatan);
@@ -38,6 +43,11 @@ class Show extends Component
             'progres' => ['required', 'integer', 'between:0,100'],
             'detailStatus' => ['nullable', 'string', 'max:255'],
             'catatan' => ['nullable', 'string', 'max:2000'],
+            'hasil' => ['nullable', 'required_if:status,'.StatusKegiatan::Selesai->value, 'string', 'max:5000'],
+            'rekomendasi' => ['nullable', 'required_if:status,'.StatusKegiatan::Selesai->value, 'string', 'max:5000'],
+        ], [
+            'hasil.required_if' => 'Isi hasil kegiatan sebelum menandai Selesai.',
+            'rekomendasi.required_if' => 'Isi rekomendasi sebelum menandai Selesai.',
         ]);
 
         $status = StatusKegiatan::from($data['status']);
@@ -45,6 +55,8 @@ class Show extends Component
             'status' => $status,
             'progres' => $data['progres'],
             'detail_status' => $data['detailStatus'] ?: null,
+            'hasil' => $data['hasil'] ?: null,
+            'rekomendasi' => $data['rekomendasi'] ?: null,
             'tanggal_selesai_aktual' => $status === StatusKegiatan::Selesai
                 ? ($this->kegiatan->tanggal_selesai_aktual ?? today())
                 : null,
@@ -83,6 +95,8 @@ class Show extends Component
         $this->status = $this->kegiatan->status->value;
         $this->progres = $this->kegiatan->progres;
         $this->detailStatus = (string) $this->kegiatan->detail_status;
+        $this->hasil = (string) $this->kegiatan->hasil;
+        $this->rekomendasi = (string) $this->kegiatan->rekomendasi;
         $this->catatan = '';
     }
 

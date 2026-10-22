@@ -23,13 +23,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable([
     'kode', 'judul', 'jenis_kegiatan_id', 'deskripsi', 'status', 'detail_status', 'progres',
     'prioritas', 'tanggal_mulai', 'tanggal_target_selesai', 'tanggal_selesai_aktual', 'catatan',
+    'hasil', 'rekomendasi',
 ])]
 class Kegiatan extends Model
 {
     use HasFactory;
 
     /** Field yang perubahannya dicatat di kegiatan_logs. */
-    public const LOGGED_FIELDS = ['status', 'detail_status', 'progres', 'catatan'];
+    public const LOGGED_FIELDS = ['status', 'detail_status', 'progres', 'catatan', 'hasil', 'rekomendasi'];
 
     protected function casts(): array
     {

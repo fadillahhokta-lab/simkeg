@@ -82,6 +82,15 @@ class DemoSeeder extends Seeder
             $item->tim()->sync($tim($anggota));
         }
 
+        $hasil = [
+            'PSLH-010-2026' => ['Kualitas udara di 4 dari 6 titik pantau melebihi baku mutu PM2.5 pada jam sibuk.', "Koordinasi dengan Dinas Perhubungan untuk pembatasan kendaraan berat.\nPemantauan ulang triwulan berikutnya."],
+            'PP-012-2026' => ['23 pengaduan ditangani, 19 selesai, 4 diteruskan ke instansi terkait.', 'Standarkan waktu respons pengaduan perizinan maksimal 5 hari kerja.'],
+            'SA-005-2026' => ['Laporan keuangan semester I tersusun; 3 temuan administrasi pada pencatatan aset.', 'Lakukan inventarisasi aset sebelum penyusunan laporan semester II.'],
+        ];
+        foreach ($hasil as $kode => [$isiHasil, $isiRekomendasi]) {
+            Kegiatan::where('kode', $kode)->update(['hasil' => $isiHasil, 'rekomendasi' => $isiRekomendasi]);
+        }
+
         // Kolom terakhir: nama file lampiran contoh (null = tanpa lampiran).
         $dinas = [
             ['PHP-004-2026', 'Denpasar', 'Pemantauan tindak lanjut temuan di satker Bali.', 'Rina Kartika, Maya Puspita', '2026-09-29', '2026-10-01', 'ST-PHP-004-01'],

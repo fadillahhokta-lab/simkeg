@@ -68,6 +68,19 @@
                         </div>
                     @endif
 
+                    @if ($k->hasil || $k->rekomendasi)
+                        <div class="grid gap-4 border-t border-border pt-4 sm:grid-cols-2">
+                            <div class="flex flex-col gap-1">
+                                <h2 class="text-sm font-medium text-muted-foreground">Hasil</h2>
+                                <p class="text-sm leading-relaxed whitespace-pre-line">{{ $k->hasil ?: '–' }}</p>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <h2 class="text-sm font-medium text-muted-foreground">Rekomendasi</h2>
+                                <p class="text-sm leading-relaxed whitespace-pre-line">{{ $k->rekomendasi ?: '–' }}</p>
+                            </div>
+                        </div>
+                    @endif
+
                     @if ($k->catatan)
                         <div class="flex flex-col gap-1 rounded-md bg-khaki-soft p-3">
                             <p class="text-xs font-semibold uppercase tracking-wide text-khaki-dark">Catatan terakhir</p>
@@ -110,8 +123,8 @@
                                         · {{ $log->created_at->translatedFormat('j M Y, H.i') }}
                                     </p>
                                     @foreach ($log->ringkasan() as $ubah)
-                                        @if ($ubah['field'] === 'catatan')
-                                            <p><span class="text-muted-foreground">Catatan:</span> {{ $ubah['ke'] }}</p>
+                                        @if (in_array($ubah['field'], ['catatan', 'hasil', 'rekomendasi']))
+                                            <p class="whitespace-pre-line"><span class="text-muted-foreground">{{ $ubah['label'] }}:</span> {{ $ubah['ke'] ?? '(dikosongkan)' }}</p>
                                         @else
                                             <p>
                                                 <span class="text-muted-foreground">{{ $ubah['label'] }}:</span>
@@ -197,6 +210,19 @@
                 </div>
 
                 <x-input label="Detail status" name="detailStatus" wire:model="detailStatus" placeholder="mis. Menunggu jadwal dengan pengelola" />
+
+                @foreach (['hasil' => ['Hasil', 'Temuan atau keluaran kegiatan'], 'rekomendasi' => ['Rekomendasi', 'Saran tindak lanjut']] as $field => [$label, $placeholder])
+                    <div class="flex flex-col gap-2">
+                        <label for="{{ $field }}" class="text-sm font-medium">
+                            {{ $label }}
+                            <span class="font-normal text-muted-foreground" x-show="$wire.status === 'selesai'">(wajib saat Selesai)</span>
+                        </label>
+                        <textarea id="{{ $field }}" wire:model="{{ $field }}" rows="3" placeholder="{{ $placeholder }}"
+                            @error($field) aria-invalid="true" @enderror
+                            class="w-full rounded-md border border-input bg-card px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-khaki-dark focus-visible:ring-3 focus-visible:ring-khaki-dark/30 aria-invalid:border-danger"></textarea>
+                        @error($field) <p class="text-xs text-danger">{{ $message }}</p> @enderror
+                    </div>
+                @endforeach
 
                 <div class="flex flex-col gap-2">
                     <label for="catatan" class="text-sm font-medium">Catatan</label>
