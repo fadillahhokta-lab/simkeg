@@ -26,7 +26,8 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-# Lokal saja, tidak di-push
+# Lokal saja, tidak di-push (panduan di docs/panduan/ tetap di-push)
 CLAUDE.md
-docs/
+docs/design/
+docs/superpowers/
 .DS_Store
