@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\LampiranDinasController;
+use App\Http\Controllers\RekapExportController;
 use App\Livewire\Dashboard;
 use App\Livewire\Dinas;
 use App\Livewire\JenisKegiatan;
 use App\Livewire\Pengguna;
+use App\Livewire\Rekap;
 use App\Livewire\Kegiatan;
 use Illuminate\Support\Facades\Route;
 
@@ -31,8 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dinas/{dinas}/edit', Dinas\Form::class)->whereNumber('dinas')->name('dinas.edit');
     Route::get('/dinas/{dinas}/lampiran', LampiranDinasController::class)->whereNumber('dinas')->name('dinas.lampiran');
 
-    // Sementara, diganti saat halamannya dikerjakan.
-    Route::view('/rekap', 'placeholder', ['title' => 'Rekap & Export'])->name('rekap.index');
+    Route::get('/rekap', Rekap\Index::class)->name('rekap.index');
+    Route::get('/rekap/export/{format}', RekapExportController::class)->whereIn('format', ['xlsx', 'pdf'])->name('rekap.export');
 
     Route::middleware('role:admin')->group(function () {
         Route::get('/jenis-kegiatan', JenisKegiatan\Index::class)->name('jenis-kegiatan.index');
