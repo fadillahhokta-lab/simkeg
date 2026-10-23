@@ -19,7 +19,12 @@ Admin melihat semua data; Staff hanya kegiatan timnya dan dinas terkait.
 
 ## Cara mencoba aplikasi
 
-Panduan ini untuk menjalankan SIMKEG di komputer Anda sendiri (Windows atau Mac). Anda hanya perlu memasang satu program, **Docker Desktop**. Pertama kali, prosesnya sekitar 15–20 menit, sebagian besar menunggu unduhan. Pastikan komputer terhubung ke internet.
+Ada dua cara:
+
+- **Dengan Docker Desktop** (Windows atau Mac): ikuti langkah di bawah ini.
+- **Windows tanpa Docker**, bila Docker Desktop tidak bisa menyala (mis. Windows Home tanpa WSL, atau virtualisasi tidak aktif): ikuti [Instalasi di Windows dengan Laragon](docs/panduan/instalasi-windows.md).
+
+Panduan di bawah ini untuk menjalankan SIMKEG dengan Docker. Anda hanya perlu memasang satu program, **Docker Desktop**. Pertama kali, prosesnya sekitar 15–20 menit, sebagian besar menunggu unduhan. Pastikan komputer terhubung ke internet.
 
 ### Langkah 1. Pasang Docker Desktop
 
@@ -177,6 +182,14 @@ npm run dev                                # terminal lain
 ```
 
 Untuk mengunggah lampiran sampai 5 MB secara lokal, naikkan `upload_max_filesize` (≥ 6M) dan `post_max_size` di `php.ini` lokal. Image Docker sudah mengaturnya.
+
+### Membuat ZIP rilis untuk Windows (Laragon)
+
+```bash
+scripts/rilis-windows.sh            # dari commit terakhir -> dist/simkeg-<versi>-windows.zip
+```
+
+ZIP berisi `vendor` dan aset yang sudah di-build, beserta `install.bat` dan `mulai.bat`, sehingga klien tidak perlu Composer atau Node.js. Kirim file ZIP itu ke klien bersama [panduan instalasinya](docs/panduan/instalasi-windows.md).
 
 ### Test
 

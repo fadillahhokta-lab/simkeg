@@ -11,6 +11,11 @@ SIMKEG adalah aplikasi internal untuk mencatat kegiatan, penugasan tim, dan dina
 
 Staff tidak bisa melihat kegiatan tim lain. Pembatasan ini diterapkan di server, bukan hanya disembunyikan di tampilan.
 
+## Instalasi
+
+- Dengan Docker: lihat [README proyek](../../README.md#cara-mencoba-aplikasi)
+- Windows tanpa Docker: [Instalasi dengan Laragon](instalasi-windows.md)
+
 ## Daftar isi
 
 1. [Masuk dan akun](01-masuk-dan-akun.md)

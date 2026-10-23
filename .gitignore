@@ -31,3 +31,4 @@ CLAUDE.md
 docs/design/
 docs/superpowers/
 .DS_Store
+/dist

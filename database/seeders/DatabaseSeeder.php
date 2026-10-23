@@ -20,15 +20,14 @@ class DatabaseSeeder extends Seeder
             RoleModel::findOrCreate($role->value, 'web');
         }
 
-        $password = env('ADMIN_PASSWORD');
-        if (! $password) {
-            $this->command?->warn('ADMIN_PASSWORD kosong, Admin pertama tidak dibuat.');
-        } elseif (! User::where('username', env('ADMIN_USERNAME', 'admin'))->exists()) {
-            User::create([
-                'name' => 'Administrator',
-                'username' => env('ADMIN_USERNAME', 'admin'),
-                'password' => $password,
-            ])->assignRole(Role::Admin->value);
+        $username = env('ADMIN_USERNAME', 'admin');
+        if (! User::where('username', $username)->exists()) {
+            $password = env('ADMIN_PASSWORD');
+            if ($password) {
+                self::buatAdmin($username, $password);
+            } else {
+                $this->command?->warn('ADMIN_PASSWORD kosong, Admin pertama tidak dibuat.');
+            }
         }
 
         $jenis = [
@@ -40,5 +39,15 @@ class DatabaseSeeder extends Seeder
         foreach ($jenis as [$kode, $nama, $deskripsi]) {
             JenisKegiatan::firstOrCreate(['kode' => $kode], ['nama' => $nama, 'deskripsi' => $deskripsi]);
         }
+    }
+
+    /** Admin pertama. Dipakai juga oleh perintah simkeg:pasang. */
+    public static function buatAdmin(string $username, string $password): User
+    {
+        return User::create([
+            'name' => 'Administrator',
+            'username' => $username,
+            'password' => $password,
+        ])->assignRole(Role::Admin->value);
     }
 }
